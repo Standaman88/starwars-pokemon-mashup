@@ -134,9 +134,9 @@
     function fetchPokemon(character) {
         // @see https://pokeapi.co
         fetch(`https://pokeapi.co/api/v2/pokemon/${character}`)
-                    .then(response => response.json())
+            .then(response => response.json())
             .then(json => populatePokemonCharacters({ ...json, character }));
-                }
+    }
 
     function populatePokemonCharacters(data) {
         const tableRow = createTableRow([
