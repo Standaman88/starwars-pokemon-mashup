@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Star Wars and Pokemon Mashup</title>
+
+    <!-- START CSS STYLE -->
+    <style>
+        body{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .header{
+            color: #2196f3;
+            font-family: Arial, Helvetica, sans-serif;
+            height: 100%;
+            margin-bottom: 10px;
+            padding: 1px;
+            text-align: center;
+            width: 100%;
+        }
+
+        table {
+            border: 3px solid #2196f3;
+            border-radius: 5px;
+            margin-bottom: 50px;
+            padding: 20px;
+            width: 75vw;
+        }
+        table td {
+            padding: 10px;
+        }
+        thead {
+            margin-bottom: 20px;
+        }
+        thead tr {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        thead td {
+            border-bottom: 3px dotted #2196f3;
+        }
+        tbody tr:nth-child(even) {
+            background: #2196f310;
+        }
+    </style>
+    <!-- End CSS STYLE -->
+
+</head>
+
+<body>
+    <div>
+        <h1 class="header">Star Wars Films</h1>
+        <table id="films-table">
+            <thead>
+                <tr>
+                    <td>Film Id</td>
+                    <td>Title</td>
+                    <td>Release Date</td>
+                    <td>Director(s)</td>
+                    <td>Producer(s)</td>
+                </tr>
+            </thead>
+            <tbody id="films-table-body"></thead>
+        </table>
+
+        <h1 class="header">Pokemon Characters</h1>
+        <table id="pokemon-table">
+            <thead>
+                <tr>
+                    <td>Pokemon Id</td>
+                    <td>Name</td>
+                    <td>Height</td>
+                    <td>Weight</td>
+                    <td>Picture</td>
+                </tr>
+            </thead>
+            <tbody id="pokemon-table-body"></tbody>
+        </table>
+    </div>
+
+<!-- START JS SCRIPT -->
+<script>
+    function createTableRow(data) {
+        const tr = document.createElement('tr');
+        data.map(columnData => {
+            const td = document.createElement('td');
+            td.innerHTML = columnData;
+            tr.appendChild(td);
+        });
+
+        return tr;
+    }
+
+    function formatDate(dateString) {
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        };
+        return (new Date(dateString)).toLocaleDateString("en-US", options);
+    }
+
+    function fetchStarWarsFilm(id) {
+        fetch(`https://swapi.dev/api/films/${id}/`)
+            .then(response => response.json())
+            .then(json => populateStarWarsFilm({ ...json, id }));
+    }
+
+    function populateStarWarsFilm(data) {
+        const tableRow = createTableRow([
+            data.id,
+            data.title,
+            formatDate(data.release_date),
+            data.director,
+            data.producer,
+        ]);
+        const tableBody = document.getElementById('films-table-body');
+        tableBody.appendChild(tableRow);
+    }
+
+    function fetchStarWarsCharacter(id) {
+        // @see https://swapi.co
+        fetch(`https://swapi.dev/api/people/${id}/`)
+            .then(response => response.json())
+            .then(json => console.log(json));
+    }
+
+    function fetchPokemon(character) {
+        // @see https://pokeapi.co
+        fetch(`https://pokeapi.co/api/v2/pokemon/${character}`)
+                    .then(response => response.json())
+            .then(json => populatePokemonCharacters({ ...json, character }));
+                }
+
+    function populatePokemonCharacters(data) {
+        const tableRow = createTableRow([
+                data.id,
+                data.name,
+                data.height,
+                data.weight,
+                `<img src="${data.sprites.front_default}" />`,
+        ]);
+        const tableBody = document.getElementById('pokemon-table-body');
+        tableBody.appendChild(tableRow);
+    }
+
+    function fetchTypicode() {
+        // @see https://jsonplaceholder.typicode.com/
+        fetch('https://jsonplaceholder.typicode.com/todos/1')
+            .then(response => response.json())
+            .then(json => console.log(json));
+    }
+
+    const filmIds = [1, 2, 3, 4, 5, 6];
+    Promise.all(filmIds.map(filmId => fetchStarWarsFilm(filmId)));
+
+    const pokemonCharacters = ['ditto', 'pikachu', 'charmander', 'geodude', 'jigglypuff'];
+    Promise.all(pokemonCharacters.map(character => fetchPokemon(character)));
+    </script>
+<!-- END JS SCRIPT -->
+
+</body>
+</html>
