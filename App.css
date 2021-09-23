@@ -1,11 +1,17 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 table {
     border: 3px solid #2196f3;
     border-radius: 5px;
+    margin-bottom: 50px;
     padding: 20px;
+    width: 75vw;
 }
 table td {
     padding: 10px;
